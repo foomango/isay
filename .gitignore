@@ -58,4 +58,8 @@ target/
 
 # cscope
 cscope.*
+
 .ropeproject/
+
+# vim
+*.swp
