@@ -32,5 +32,7 @@ class ShanBay(object):
 
         if data['status_code'] == 0:
             meaning = data['data']['definition']
+        else:
+            meaning = data['msg']
 
         return meaning
