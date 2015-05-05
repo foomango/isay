@@ -57,14 +57,12 @@ class ShanBay(object):
 
         if data['status_code'] == 0:
             meaning = data['data']['definition']
-<<<<<<< HEAD
             meaning = meaning.replace('\n', '\n ')
-=======
+
             if self.autoSave and 'learning_id' not in data['data']:
                 print 'TODO'
             else:
                 print 'learning_id: ', data['data']['learning_id']
->>>>>>> 51de484b4a89a57f95ac0fcc7ba8249998e2a54c
         else:
             meaning = data['msg']
 
