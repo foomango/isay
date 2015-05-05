@@ -23,6 +23,7 @@ class ShanBay(object):
     def __init__(self):
         self.url = 'http://www.shanbay.com/api/v1/bdc/search?%s'
         self.loginUrl = 'http://shanbay.com/accounts/login/'
+        self.learnUrl = 'http://shanbay.com/api/v1/bdc/learning/'
         self.autoSave = True
         self.cj = cookielib.MozillaCookieJar(self.cookiePath)
         self.loadCookieJar()
@@ -60,13 +61,29 @@ class ShanBay(object):
             meaning = meaning.replace('\n', '\n ')
 
             if self.autoSave and 'learning_id' not in data['data']:
-                print 'TODO'
-            else:
-                print 'learning_id: ', data['data']['learning_id']
+                id = data['data']['content_id']
+                self.addToLearningList(id)
         else:
             meaning = data['msg']
 
         return meaning
+
+    def addToLearningList(self, id):
+        """Add word to learning list
+        Args:
+            id: int, id of word
+        """
+        username = os.environ['username']
+        password = os.environ['password']
+
+        url = self.learnUrl
+        headers = {'X-Requested-With': 'XMLHttpRequest'}
+        data = {'id': id, 'content_type': 'vocabulary'}
+        try:
+            self.postJson(url, data, headers)
+        except Exception:
+            self.login(username, password)
+            self.postJson(url, data, headers)
 
     def request(self, url, params):
         """Send request to shanbay.com
