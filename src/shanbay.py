@@ -32,6 +32,7 @@ class ShanBay(object):
 
         if data['status_code'] == 0:
             meaning = data['data']['definition']
+            meaning = meaning.replace('\n', '\n ')
         else:
             meaning = data['msg']
 
