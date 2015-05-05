@@ -44,8 +44,8 @@ class ShanBayTestCase(TestCase):
         self.assertTrue('int' in self.shanBay.translate('hi'))
 
     def test_addToLearningList(self):
-        self.shanBay.addToLearningList(3130)
-        self.assertTrue(False)
+        jsonData = self.shanBay.addToLearningList(3130)
+        self.assertEquals(0, jsonData['status_code'])
 
     def test_getHeaders(self):
         url = 'http://shanbay.com/accounts/login/'

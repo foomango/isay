@@ -72,6 +72,7 @@ class ShanBay(object):
         """Add word to learning list
         Args:
             id: int, id of word
+            return: json, json received from the web
         """
         username = os.environ['username']
         password = os.environ['password']
@@ -80,10 +81,12 @@ class ShanBay(object):
         headers = {'X-Requested-With': 'XMLHttpRequest'}
         data = {'id': id, 'content_type': 'vocabulary'}
         try:
-            self.postJson(url, data, headers)
+            jsonData = self.postJson(url, data, headers)
         except Exception:
             self.login(username, password)
-            self.postJson(url, data, headers)
+            jsonData = self.postJson(url, data, headers)
+
+        return jsonData
 
     def request(self, url, params):
         """Send request to shanbay.com
