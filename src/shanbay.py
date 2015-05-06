@@ -5,6 +5,8 @@ Translate word by shanbay.com
 
 __author__ = 'foomango@gmail.com'
 
+from config import Config
+
 import urllib
 import urllib2
 import cookielib
@@ -18,21 +20,44 @@ class ShanBay(object):
     """
 
     cookiePath = os.path.join(os.path.expanduser('~'),
-                              'Documents', '.cookie.txt')
+                              '.isay', '.cookie.txt')
 
     def __init__(self):
         self.url = 'http://www.shanbay.com/api/v1/bdc/search?%s'
         self.loginUrl = 'http://shanbay.com/accounts/login/'
         self.learnUrl = 'http://shanbay.com/api/v1/bdc/learning/'
-        self.autoSave = True
+
+        self.conf = Config()
+
         self.cj = cookielib.MozillaCookieJar(self.cookiePath)
         self.loadCookieJar()
 
-        if self.autoSave:
+        if 'true' == self.conf.getAutosave():
             self.opener = urllib2.build_opener(
                 urllib2.HTTPCookieProcessor(self.cj))
         else:
             self.opener = urllib2.build_opener()
+
+    def getUsername(self):
+        """Get user name
+        Args:
+            return: str, user name
+        """
+        return self.conf.getUsername()
+
+    def getPasswd(self):
+        """Get pass word
+        Args:
+            return: str, pass word
+        """
+        return self.conf.getPasswd()
+
+    def getAutosave(self):
+        """Get auto save
+        Args:
+            return: bool, is auto save
+        """
+        return 'true' == self.conf.getAutosave()
 
     def loadCookieJar(self):
         """Load cookies from file, if file does not exist, create it
@@ -60,7 +85,7 @@ class ShanBay(object):
             meaning = data['data']['definition']
             meaning = meaning.replace('\n', '\n ')
 
-            if self.autoSave and 'learning_id' not in data['data']:
+            if self.getAutosave() and 'learning_id' not in data['data']:
                 id = data['data']['content_id']
                 self.addToLearningList(id)
         else:
@@ -74,8 +99,8 @@ class ShanBay(object):
             id: int, id of word
             return: json, json received from the web
         """
-        username = os.environ['username']
-        password = os.environ['password']
+        username = self.getUsername()
+        password = self.getPasswd()
 
         url = self.learnUrl
         headers = {'X-Requested-With': 'XMLHttpRequest'}
@@ -136,7 +161,7 @@ class ShanBay(object):
         data = response.read()
         jsonData = json.loads(data)
 
-        if self.autoSave:
+        if self.getAutosave():
             self.cj.save()
         return jsonData
 

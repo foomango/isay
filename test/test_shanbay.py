@@ -13,6 +13,7 @@ import urllib2
 import urllib
 
 from shanbay import ShanBay
+from config import Config
 
 
 class ShanBayTestCase(TestCase):
@@ -20,8 +21,7 @@ class ShanBayTestCase(TestCase):
     """
 
     def setUp(self):
-        self.cookiePath = os.path.join(os.path.expanduser('~'),
-                                       'Documents', '.testcookie.txt')
+        self.cookiePath = '/tmp/isay/.testcookie.txt'
         cj = cookielib.MozillaCookieJar(self.cookiePath)
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         opener.open('http://shanbay.com/accounts/login/')
@@ -31,10 +31,26 @@ class ShanBayTestCase(TestCase):
         ShanBay.cookiePath = self.cookiePath
         self.shanBay = ShanBay()
 
+        Config.CONFIG_FILE = '/tmp/isay/isay_real.conf'
+        self.conf = Config()
+        self.shanBay.conf = self.conf
+
     def login(self):
-        username = os.environ['username']
-        password = os.environ['password']
-        self.shanBay.login(username, password)
+        username = self.conf.getUsername()
+        passwd = self.conf.getPasswd()
+        self.shanBay.login(username, passwd)
+
+    def test_getUsername(self):
+        username = self.conf.getUsername()
+        self.assertEquals(username, self.shanBay.getUsername())
+
+    def test_getPasswd(self):
+        passwd = self.conf.getPasswd()
+        self.assertEquals(passwd, self.shanBay.getPasswd())
+
+    def test_getAutosave(self):
+        autosave = 'true' == self.conf.getAutosave()
+        self.assertEquals(autosave, self.shanBay.getAutosave())
 
     def test_loadCookieJar(self):
         self.shanBay.loadCookieJar()
@@ -62,9 +78,7 @@ class ShanBayTestCase(TestCase):
         self.assertEquals('', cookies['user'])
 
     def test_getJson(self):
-        username = os.environ['username']
-        password = os.environ['password']
-        self.shanBay.login(username, password)
+        self.login()
 
         url = 'http://www.shanbay.com/api/v1/bdc/search?%s'
         params = urllib.urlencode({'word': 'hello'})
@@ -73,9 +87,7 @@ class ShanBayTestCase(TestCase):
         self.assertEquals(0, jsonData['status_code'])
 
     def test_postJson(self):
-        username = os.environ['username']
-        password = os.environ['password']
-        self.shanBay.login(username, password)
+        self.login()
 
         url = 'http://shanbay.com/api/v1/bdc/learning/'
         headers = {'X-Requested-With': 'XMLHttpRequest'}
@@ -84,9 +96,7 @@ class ShanBayTestCase(TestCase):
         self.assertEquals(0, jsonData['status_code'])
 
     def test_login(self):
-        username = os.environ['username']
-        password = os.environ['password']
-        self.shanBay.login(username, password)
+        self.login()
         self.cj.load()
         sessionid = self.cj._cookies['.shanbay.com']['/']['sessionid'].value
         self.assertNotEquals('', sessionid)
