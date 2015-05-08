@@ -82,8 +82,9 @@ class ShanBay(object):
         data = self.getJson(url, [])
 
         if data['status_code'] == 0:
-            meaning = data['data']['definition']
-            meaning = meaning.replace('\n', '\n ')
+            phonetics = '[' + data['data']['pronunciation'] + ']'
+            meaning = data['data']['content'] + phonetics + '\n'
+            meaning += data['data']['definition'].replace('\n', '\n ')
 
             if self.getAutosave() and 'learning_id' not in data['data']:
                 id = data['data']['content_id']
