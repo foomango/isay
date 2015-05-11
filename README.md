@@ -1,5 +1,5 @@
 # isay
-A command line dictionary.
+A command line dictionary based on [shanbay](http://www.shanbay.com/).
 
 # Install
 1. Run below script.
