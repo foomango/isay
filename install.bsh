@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+echo "Installing isay......"
+DIR_NAME=$(dirname $0)
+DIR_NAME=$(readlink -e $DIR_NAME)
+CONF_PATH=$DIR_NAME/isay.conf
+BIN_PATH=$DIR_NAME/src/main.py
+
+mkdir -p ~/.isay
+if [ ! -f ~/.isay/isay.conf ]; then
+  cp $CONF_PATH ~/.isay/isay.conf
+fi
+
+sudo ln -sf $BIN_PATH /usr/bin/isay
+
+echo "Installing Success!"
