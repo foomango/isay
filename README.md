@@ -11,7 +11,7 @@ A command line dictionary based on [shanbay](http://www.shanbay.com/).
     ```
 
 # Config
-1. Open ~/.isay/isay.conf with your favorite editor.
+1. Open ~/.isay/isay.conf with your favorite text editor.
 2. Config your [shanbay](http://www.shanbay.com/) account.
 
     ```
