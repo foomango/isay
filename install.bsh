@@ -11,6 +11,6 @@ if [ ! -f ~/.isay/isay.conf ]; then
   cp $CONF_PATH ~/.isay/isay.conf
 fi
 
-sudo ln -sf $BIN_PATH /usr/bin/isay
+sudo ln -sf $BIN_PATH /usr/local/bin/isay
 
 echo "Installing Success!"
