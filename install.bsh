@@ -2,7 +2,7 @@
 
 echo "Installing isay......"
 DIR_NAME=$(dirname $0)
-DIR_NAME=$(readlink -e $DIR_NAME)
+DIR_NAME=$(cd $DIR_NAME && pwd -P)
 CONF_PATH=$DIR_NAME/isay.conf
 BIN_PATH=$DIR_NAME/src/main.py
 
